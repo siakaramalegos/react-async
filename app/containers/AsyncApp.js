@@ -4,7 +4,7 @@ import {
   selectSubreddit,
   fetchPostsIfNeeded,
   invalidateSubreddit } from '../actions'
-// import Picker from '../components/Picker'
+import Picker from '../components/Picker'
 import Posts from '../components/Posts'
 
 class AsyncApp extends React.Component {
@@ -37,6 +37,10 @@ class AsyncApp extends React.Component {
     const { selectedSubreddit, posts, isFetching, lastUpdated } = this.props
     return (
       <div id="async-app">
+        <Picker
+          value={selectedSubreddit}
+          onChange={this.handleChange}
+          options={['reactjs', 'frontend']} />
         <p>
           {lastUpdated &&
             <span>
