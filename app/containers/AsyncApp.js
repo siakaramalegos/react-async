@@ -5,7 +5,7 @@ import {
   fetchPostsIfNeeded,
   invalidateSubreddit } from '../actions'
 // import Picker from '../components/Picker'
-// import Posts from '../components/Posts'
+import Posts from '../components/Posts'
 
 class AsyncApp extends React.Component {
 
@@ -57,12 +57,20 @@ class AsyncApp extends React.Component {
         }
         {posts.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            hello posts
+            <Posts posts={posts} />
           </div>
         }
       </div>
     )
   }
+}
+
+AsyncApp.propTypes = {
+  selectedSubreddit: PropTypes.string.isRequired,
+  posts: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  lastUpdated: PropTypes.number,
+  dispatch: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
