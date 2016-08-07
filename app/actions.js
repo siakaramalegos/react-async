@@ -37,7 +37,7 @@ export function receivePosts(subreddit, json) {
 
 // Thunk action creator - use it just like any other action creator:
 // store.dispatch(fetchPosts('reactjs'))
-export function fetchPosts(subreddit) {
+function fetchPosts(subreddit) {
   return function (dispatch) {
     // First dispatch informs app that API call is starting
     dispatch(requestPosts(subreddit))
@@ -46,5 +46,29 @@ export function fetchPosts(subreddit) {
     return fetch(`http://www.reddit.com/r/${subreddit}.json`)
       .then(response => response.json())
       .then(json => dispatch(receivePosts(subreddit, json)))
+  }
+}
+
+// Checks if posts are empty, being fetched, or refreshed
+function shouldFetchPosts(state, subreddit) {
+  const posts = state.postsBySubreddit[subreddit]
+  if (!posts) {
+    return true
+  } else if (posts.isFetching) {
+    return false
+  } else {
+    return posts.didInvalidate
+  }
+}
+
+// Checks if should fetch before fetching
+export function fetchPostsIfNeeded(subreddit) {
+  return (dispatch, getState) => {
+    if (shouldFetchPosts(getState(), subreddit)) {
+      return dispatch(fetchPosts(subreddit))
+    } else {
+      // Let the calling code know there is nothing to resolve
+      return Promise.resolve()
+    }
   }
 }
